@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="theme-color" content="#0a0e27">
+    <title>SRLIENS - Chatbot Tweaks</title>
+    <link rel="icon" href="https://srlines.net/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="https://srlines.net/favicon.ico">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0d1b2a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px 32px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .brand-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .brand-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-name span {
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-sub {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            margin: 20px 0 28px 0;
+        }
+
+        .form-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .form-subtitle {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group label .required {
+            color: #ff6b6b;
+            margin-left: 2px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+            font-family: inherit;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-group select option {
+            background: #1a1f3a;
+            color: white;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #00d4ff;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
+        }
+
+        .input-hint {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 11px;
+            margin-top: 6px;
+            opacity: 0.7;
+        }
+
+        /* Toggle Switch */
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 8px 0;
+        }
+
+        .toggle-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .toggle {
+            position: relative;
+            width: 50px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .toggle.active {
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+        }
+
+        .toggle .toggle-dot {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .toggle.active .toggle-dot {
+            transform: translateX(22px);
+        }
+
+        /* Conditional Fields */
+        .conditional-fields {
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: all 0.4s ease;
+            padding-left: 8px;
+            border-left: 2px solid rgba(0, 212, 255, 0.2);
+            margin-top: 0;
+        }
+
+        .conditional-fields.open {
+            max-height: 600px;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
+        .conditional-fields .form-group {
+            margin-bottom: 16px;
+        }
+
+        .conditional-fields .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+            letter-spacing: 0.5px;
+            margin-top: 8px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-submit .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+
+        .btn-submit.loading .spinner {
+            display: block;
+        }
+
+        .btn-submit.loading .btn-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #result {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        #result.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #result.success {
+            border-color: rgba(46, 213, 115, 0.3);
+        }
+
+        #result.error {
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        #result .result-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        #result .result-title {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        #result .result-msg {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            word-break: break-all;
+        }
+
+        #result.success .result-title { color: #2ed573; }
+        #result.error .result-title { color: #ff6b6b; }
+
+        #result .result-details {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .footer a {
+            color: rgba(255, 255, 255, 0.3);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .footer .heart {
+            color: #ff6b6b;
+            display: inline-block;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-dot.online {
+            background: #2ed573;
+            box-shadow: 0 0 10px rgba(46, 213, 115, 0.3);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 28px 20px;
+                border-radius: 20px;
+            }
+            .brand-name { font-size: 24px; }
+            .brand-icon { width: 40px; height: 40px; }
+            .form-title { font-size: 18px; }
+            .form-group input,
+            .form-group select { padding: 12px 14px; font-size: 14px; }
+            .btn-submit { padding: 14px; font-size: 15px; }
+        }
+
+        @media (max-width: 380px) {
+            .container { padding: 20px 16px; }
+            .brand-name { font-size: 20px; }
+            .brand-icon { width: 34px; height: 34px; }
+            .form-title { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="brand">
+            <div class="brand-logo">
+                <div class="brand-icon">
+                    <img src="https://srlines.net/logo.png" alt="SRLIENS LOGO">
+                </div>
+                <div class="brand-name"><span>SRLIENS</span></div>
+            </div>
+            <div class="brand-sub">Automation Platform</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-title">Chatbot Tweaks</div>
+        <div class="form-subtitle">Configure your chatbot flow settings</div>
+
+        <form id="chatbotForm" autocomplete="off">
+            <!-- API Token -->
+            <div class="form-group">
+                <label for="apiToken">
+                    API Token <span class="required">*</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="apiToken" 
+                    placeholder="Enter your API token" 
+                    required
+                    autocomplete="off"
+                    spellcheck="false"
+                >
+                <div class="input-hint">Your authentication token from SRLIENS dashboard</div>
+            </div>
+
+            <!-- Flow ID -->
+            <div class="form-group">
+                <label for="flowId">
+                    Flow ID <span class="required">*</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="flowId" 
+                    placeholder="Enter the flow ID" 
+                    required
+                    autocomplete="off"
+                    spellcheck="false"
+                >
+                <div class="input-hint">The unique identifier of your flow</div>
+            </div>
+
+            <!-- Need Pause - Toggle -->
+            <div class="form-group">
+                <label>Need Pause</label>
+                <div class="toggle-group">
+                    <span class="toggle-label">Enable pause functionality for this flow</span>
+                    <div class="toggle" id="needPauseToggle">
+                        <div class="toggle-dot"></div>
+                    </div>
+                </div>
+                <div class="input-hint">When enabled, the chatbot will pause between messages</div>
+            </div>
+
+            <!-- Conditional: Pause Hours -->
+            <div class="conditional-fields" id="pauseFields">
+                <div class="form-group">
+                    <label for="pauseHours">
+                        Pause Hours <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="number" 
+                        id="pauseHours" 
+                        placeholder="Enter hours (e.g., 2)" 
+                        min="1"
+                        max="24"
+                    >
+                    <div class="input-hint">Number of hours to pause between messages</div>
+                </div>
+            </div>
+
+            <!-- Follow Up - Toggle -->
+            <div class="form-group">
+                <label>Follow Up</label>
+                <div class="toggle-group">
+                    <span class="toggle-label">Enable follow-up messages for this flow</span>
+                    <div class="toggle" id="followUpToggle">
+                        <div class="toggle-dot"></div>
+                    </div>
+                </div>
+                <div class="input-hint">When enabled, the chatbot will send follow-up messages</div>
+            </div>
+
+            <!-- Conditional: Follow Up Fields -->
+            <div class="conditional-fields" id="followUpFields">
+                <div class="form-group">
+                    <label for="followUpLimit">
+                        Follow Up Limit <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="number" 
+                        id="followUpLimit" 
+                        placeholder="Enter limit (default: 3)" 
+                        min="1"
+                        max="10"
+                        value="3"
+                    >
+                    <div class="input-hint">Maximum number of follow-up messages (1-10)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="followUpMessage1">
+                        Follow Up Message 1 <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="followUpMessage1" 
+                        placeholder="Enter first follow-up message"
+                    >
+                    <div class="input-hint">First message to send as follow-up</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="followUpMessage2">
+                        Follow Up Message 2
+                    </label>
+                    <input 
+                        type="text" 
+                        id="followUpMessage2" 
+                        placeholder="Enter second follow-up message"
+                    >
+                    <div class="input-hint">Second message to send as follow-up (optional)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="followUpMessage3">
+                        Follow Up Message 3
+                    </label>
+                    <input 
+                        type="text" 
+                        id="followUpMessage3" 
+                        placeholder="Enter third follow-up message"
+                    >
+                    <div class="input-hint">Third message to send as follow-up (optional)</div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <span class="btn-text">⚙️ Update Chatbot Tweaks</span>
+                <div class="spinner"></div>
+            </button>
+        </form>
+
+        <div id="result">
+            <div class="result-icon" id="resultIcon"></div>
+            <div class="result-title" id="resultTitle"></div>
+            <div class="result-msg" id="resultMsg"></div>
+            <div class="result-details" id="resultDetails"></div>
+        </div>
+
+        <div class="footer">
+            <span class="status-dot online"></span>
+            <span>SRLIENS v2.0</span>
+            <span style="margin: 0 8px;">•</span>
+            <span>Powered by <a href="https://srlines.net" target="_blank">SRLIENS</a></span>
+            <br>
+            <span style="font-size: 11px; opacity: 0.6;">
+                Made with <span class="heart">♥</span> for automation
+            </span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const form = document.getElementById('chatbotForm');
+            const apiTokenInput = document.getElementById('apiToken');
+            const flowIdInput = document.getElementById('flowId');
+            const submitBtn = document.getElementById('submitBtn');
+            const resultDiv = document.getElementById('result');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultMsg = document.getElementById('resultMsg');
+            const resultDetails = document.getElementById('resultDetails');
+
+            // Toggle elements
+            const needPauseToggle = document.getElementById('needPauseToggle');
+            const followUpToggle = document.getElementById('followUpToggle');
+            const pauseFields = document.getElementById('pauseFields');
+            const followUpFields = document.getElementById('followUpFields');
+
+            // Input elements
+            const pauseHoursInput = document.getElementById('pauseHours');
+            const followUpLimitInput = document.getElementById('followUpLimit');
+            const followUpMessage1 = document.getElementById('followUpMessage1');
+            const followUpMessage2 = document.getElementById('followUpMessage2');
+            const followUpMessage3 = document.getElementById('followUpMessage3');
+
+            const API_URL = 'https://crm.srlines.net/api/v1/chatbot-tweaks';
+
+            // State
+            let needPause = false;
+            let followUp = false;
+
+            // Toggle functions
+            function setupToggle(toggleElement, fieldContainer, stateCallback) {
+                toggleElement.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const isActive = this.classList.contains('active');
+                    fieldContainer.classList.toggle('open', isActive);
+                    if (stateCallback) stateCallback(isActive);
+                });
+            }
+
+            setupToggle(needPauseToggle, pauseFields, function(isActive) {
+                needPause = isActive;
+                if (!isActive) {
+                    pauseHoursInput.value = '';
+                }
+            });
+
+            setupToggle(followUpToggle, followUpFields, function(isActive) {
+                followUp = isActive;
+                if (!isActive) {
+                    followUpLimitInput.value = '3';
+                    followUpMessage1.value = '';
+                    followUpMessage2.value = '';
+                    followUpMessage3.value = '';
+                }
+            });
+
+            function showResult(success, title, msg, details = null) {
+                resultDiv.className = 'show ' + (success ? 'success' : 'error');
+                resultIcon.textContent = success ? '✅' : '❌';
+                resultTitle.textContent = title;
+                resultMsg.textContent = msg;
+                
+                if (details) {
+                    resultDetails.textContent = typeof details === 'string' ? details : JSON.stringify(details, null, 2);
+                } else {
+                    resultDetails.textContent = '';
+                }
+
+                setTimeout(() => {
+                    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+
+            function setLoading(loading) {
+                if (loading) {
+                    submitBtn.classList.add('loading');
+                    submitBtn.disabled = true;
+                } else {
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                }
+            }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const token = apiTokenInput.value.trim();
+                const flow_id = flowIdInput.value.trim();
+
+                // Validate token
+                if (!token) {
+                    showResult(false, 'Validation Error', 'Please enter your API token');
+                    apiTokenInput.focus();
+                    return;
+                }
+
+                // Validate flow_id
+                if (!flow_id) {
+                    showResult(false, 'Validation Error', 'Please enter the flow ID');
+                    flowIdInput.focus();
+                    return;
+                }
+
+                // Validate pause hours if enabled
+                if (needPause) {
+                    const pauseHours = pauseHoursInput.value.trim();
+                    if (!pauseHours || parseInt(pauseHours) < 1) {
+                        showResult(false, 'Validation Error', 'Please enter valid pause hours (minimum 1)');
+                        pauseHoursInput.focus();
+                        return;
+                    }
+                }
+
+                // Validate follow up fields if enabled
+                if (followUp) {
+                    const limit = followUpLimitInput.value.trim();
+                    if (!limit || parseInt(limit) < 1) {
+                        showResult(false, 'Validation Error', 'Please enter valid follow up limit (minimum 1)');
+                        followUpLimitInput.focus();
+                        return;
+                    }
+
+                    const msg1 = followUpMessage1.value.trim();
+                    if (!msg1) {
+                        showResult(false, 'Validation Error', 'Please enter at least one follow-up message');
+                        followUpMessage1.focus();
+                        return;
+                    }
+                }
+
+                setLoading(true);
+                resultDiv.className = '';
+
+                try {
+                    const payload = {
+                        token: token,
+                        flow_id: flow_id,
+                        need_pause: needPause,
+                        followUp: followUp
+                    };
+
+                    // Add conditional fields only if enabled
+                    if (needPause) {
+                        payload.pause_hours = parseInt(pauseHoursInput.value.trim());
+                    }
+
+                    if (followUp) {
+                        payload.followUp_limit = parseInt(followUpLimitInput.value.trim());
+                        payload.followUp_message1 = followUpMessage1.value.trim();
+                        payload.followUp_message2 = followUpMessage2.value.trim() || '';
+                        payload.followUp_message3 = followUpMessage3.value.trim() || '';
+                    }
+
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        showResult(true, 'Success!', data.message || 'Chatbot tweaks updated successfully', data.data);
+                    } else {
+                        showResult(false, 'Update Failed', data.message || 'Something went wrong', data);
+                    }
+
+                } catch (error) {
+                    showResult(false, 'Network Error', 'Failed to connect to server.', {
+                        error: error.message
+                    });
+                } finally {
+                    setLoading(false);
+                }
+            });
+
+            // Reset result on input
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', () => { resultDiv.className = ''; });
+            });
+
+            console.log('🚀 SRLIENS Chatbot Tweaks ready');
+            console.log(`📡 API Endpoint: ${API_URL}`);
+        })();
+    </script>
+</body>
+</html>
