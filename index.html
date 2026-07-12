@@ -116,6 +116,31 @@
             margin-bottom: 24px;
         }
 
+        .caution-box {
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 3px solid #ff6b6b;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .caution-box .caution-title {
+            color: #ff6b6b;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .caution-box .caution-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .caution-box .caution-text strong {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -148,6 +173,10 @@
             font-family: inherit;
             appearance: none;
             -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.5)' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
         }
 
         .form-group select option {
@@ -404,6 +433,7 @@
             .form-group input,
             .form-group select { padding: 12px 14px; font-size: 14px; }
             .btn-submit { padding: 14px; font-size: 15px; }
+            .caution-box { padding: 10px 12px; }
         }
 
         @media (max-width: 380px) {
@@ -431,6 +461,16 @@
         <div class="form-title">Chatbot Tweaks</div>
         <div class="form-subtitle">Configure your chatbot flow settings</div>
 
+        <!-- Caution Box -->
+        <div class="caution-box">
+            <div class="caution-title">⚠️ Important Note</div>
+            <div class="caution-text">
+                <strong>Keep only one active flow at a time.</strong> Delete inactive flows to prevent 
+                duplication of follow-up messages. This ensures your chatbot works efficiently 
+                without sending duplicate responses.
+            </div>
+        </div>
+
         <form id="chatbotForm" autocomplete="off">
             <!-- API Token -->
             <div class="form-group">
@@ -446,22 +486,6 @@
                     spellcheck="false"
                 >
                 <div class="input-hint">Your authentication token from SRLIENS dashboard</div>
-            </div>
-
-            <!-- Flow ID -->
-            <div class="form-group">
-                <label for="flowId">
-                    Flow ID <span class="required">*</span>
-                </label>
-                <input 
-                    type="text" 
-                    id="flowId" 
-                    placeholder="Enter the flow ID" 
-                    required
-                    autocomplete="off"
-                    spellcheck="false"
-                >
-                <div class="input-hint">The unique identifier of your flow</div>
             </div>
 
             <!-- Need Pause - Toggle -->
@@ -489,7 +513,7 @@
                         min="1"
                         max="24"
                     >
-                    <div class="input-hint">Number of hours to pause between messages</div>
+                    <div class="input-hint">Number of hours to pause between messages (1-24)</div>
                 </div>
             </div>
 
@@ -511,15 +535,12 @@
                     <label for="followUpLimit">
                         Follow Up Limit <span class="required">*</span>
                     </label>
-                    <input 
-                        type="number" 
-                        id="followUpLimit" 
-                        placeholder="Enter limit (default: 3)" 
-                        min="1"
-                        max="10"
-                        value="3"
-                    >
-                    <div class="input-hint">Maximum number of follow-up messages (1-10)</div>
+                    <select id="followUpLimit" required>
+                        <option value="1">1 message</option>
+                        <option value="2">2 messages</option>
+                        <option value="3" selected>3 messages (default)</option>
+                    </select>
+                    <div class="input-hint">Number of follow-up messages to send</div>
                 </div>
 
                 <div class="form-group">
@@ -588,7 +609,6 @@
         (function() {
             const form = document.getElementById('chatbotForm');
             const apiTokenInput = document.getElementById('apiToken');
-            const flowIdInput = document.getElementById('flowId');
             const submitBtn = document.getElementById('submitBtn');
             const resultDiv = document.getElementById('result');
             const resultIcon = document.getElementById('resultIcon');
@@ -673,19 +693,11 @@
                 e.preventDefault();
                 
                 const token = apiTokenInput.value.trim();
-                const flow_id = flowIdInput.value.trim();
 
                 // Validate token
                 if (!token) {
                     showResult(false, 'Validation Error', 'Please enter your API token');
                     apiTokenInput.focus();
-                    return;
-                }
-
-                // Validate flow_id
-                if (!flow_id) {
-                    showResult(false, 'Validation Error', 'Please enter the flow ID');
-                    flowIdInput.focus();
                     return;
                 }
 
@@ -701,13 +713,6 @@
 
                 // Validate follow up fields if enabled
                 if (followUp) {
-                    const limit = followUpLimitInput.value.trim();
-                    if (!limit || parseInt(limit) < 1) {
-                        showResult(false, 'Validation Error', 'Please enter valid follow up limit (minimum 1)');
-                        followUpLimitInput.focus();
-                        return;
-                    }
-
                     const msg1 = followUpMessage1.value.trim();
                     if (!msg1) {
                         showResult(false, 'Validation Error', 'Please enter at least one follow-up message');
@@ -722,7 +727,6 @@
                 try {
                     const payload = {
                         token: token,
-                        flow_id: flow_id,
                         need_pause: needPause,
                         followUp: followUp
                     };
@@ -733,7 +737,7 @@
                     }
 
                     if (followUp) {
-                        payload.followUp_limit = parseInt(followUpLimitInput.value.trim());
+                        payload.followUp_limit = parseInt(followUpLimitInput.value);
                         payload.followUp_message1 = followUpMessage1.value.trim();
                         payload.followUp_message2 = followUpMessage2.value.trim() || '';
                         payload.followUp_message3 = followUpMessage3.value.trim() || '';
@@ -765,7 +769,7 @@
             });
 
             // Reset result on input
-            document.querySelectorAll('input').forEach(input => {
+            document.querySelectorAll('input, select').forEach(input => {
                 input.addEventListener('input', () => { resultDiv.className = ''; });
             });
 
