@@ -707,18 +707,15 @@
             }
 
             function normalizeMessageForJson(value) {
-                return value.trim().replace(/\r\n|\r|\n/g, '\\n');
+                return value.trim();
             }
 
             function buildFollowUpMessages() {
-                const availableMessages = [
-                    normalizeMessageForJson(followUpMessage1.value),
-                    normalizeMessageForJson(followUpMessage2.value),
-                    normalizeMessageForJson(followUpMessage3.value)
-                ];
-                const selectedLimit = parseInt(followUpLimitInput.value, 10);
-
-                return availableMessages.slice(0, selectedLimit);
+                return {
+                    first: normalizeMessageForJson(followUpMessage1.value),
+                    second: normalizeMessageForJson(followUpMessage2.value),
+                    third: normalizeMessageForJson(followUpMessage3.value)
+                };
             }
 
             function formatSubmittedPayload(payload) {
