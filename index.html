@@ -711,11 +711,11 @@
             }
 
             function buildFollowUpMessages() {
-                return {
-                    first: normalizeMessageForJson(followUpMessage1.value),
-                    second: normalizeMessageForJson(followUpMessage2.value),
-                    third: normalizeMessageForJson(followUpMessage3.value)
-                };
+                return [
+                    normalizeMessageForJson(followUpMessage1.value),
+                    normalizeMessageForJson(followUpMessage2.value),
+                    normalizeMessageForJson(followUpMessage3.value)
+                ];
             }
 
             function formatSubmittedPayload(payload) {
@@ -770,8 +770,11 @@
                     }
 
                     if (followUp) {
+                        const followUpMessages = buildFollowUpMessages();
                         payload.followUp_limit = parseInt(followUpLimitInput.value, 10);
-                        payload.followUp_message = buildFollowUpMessages();
+                        payload.followUp_message1 = followUpMessages[0];
+                        payload.followUp_message2 = followUpMessages[1];
+                        payload.followUp_message3 = followUpMessages[2];
                     }
 
                     const response = await fetch(API_URL, {
