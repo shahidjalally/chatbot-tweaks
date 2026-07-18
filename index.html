@@ -711,25 +711,18 @@
             }
 
             function buildFollowUpMessages() {
-                const messages = {
-                    first: normalizeMessageForJson(followUpMessage1.value),
-                    second: normalizeMessageForJson(followUpMessage2.value),
-                    third: normalizeMessageForJson(followUpMessage3.value)
-                };
-
+                const availableMessages = [
+                    normalizeMessageForJson(followUpMessage1.value),
+                    normalizeMessageForJson(followUpMessage2.value),
+                    normalizeMessageForJson(followUpMessage3.value)
+                ];
                 const selectedLimit = parseInt(followUpLimitInput.value, 10);
-                if (selectedLimit < 2) {
-                    messages.second = '';
-                }
-                if (selectedLimit < 3) {
-                    messages.third = '';
-                }
 
-                return messages;
+                return availableMessages.slice(0, selectedLimit);
             }
 
-            function formatSubmittedMessages(messages) {
-                return JSON.stringify(messages, null, 2);
+            function formatSubmittedPayload(payload) {
+                return JSON.stringify(payload, null, 2);
             }
 
             form.addEventListener('submit', async (e) => {
@@ -795,10 +788,7 @@
                     const data = await response.json();
 
                     if (data.success) {
-                        const successDetails = followUp
-                            ? formatSubmittedMessages(payload.followUp_message)
-                            : data.data;
-                        showResult(true, 'Success!', data.message || 'Chatbot tweaks updated successfully', successDetails);
+                        showResult(true, 'Success!', data.message || 'Chatbot tweaks updated successfully', formatSubmittedPayload(payload));
                     } else {
                         showResult(false, 'Update Failed', data.message || 'Something went wrong', data);
                     }
