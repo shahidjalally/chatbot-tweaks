@@ -688,6 +688,24 @@
                 }
             }
 
+            function buildFollowUpMessages() {
+                const messages = {
+                    first: followUpMessage1.value.trim(),
+                    second: followUpMessage2.value.trim(),
+                    third: followUpMessage3.value.trim()
+                };
+
+                const selectedLimit = parseInt(followUpLimitInput.value, 10);
+                if (selectedLimit < 2) {
+                    messages.second = '';
+                }
+                if (selectedLimit < 3) {
+                    messages.third = '';
+                }
+
+                return messages;
+            }
+
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
@@ -736,10 +754,8 @@
                     }
 
                     if (followUp) {
-                        payload.followUp_limit = parseInt(followUpLimitInput.value);
-                        payload.followUp_message1 = followUpMessage1.value.trim();
-                        payload.followUp_message2 = followUpMessage2.value.trim() || '';
-                        payload.followUp_message3 = followUpMessage3.value.trim() || '';
+                        payload.followUp_limit = parseInt(followUpLimitInput.value, 10);
+                        payload.followUp_message = buildFollowUpMessages();
                     }
 
                     const response = await fetch(API_URL, {
